@@ -2,6 +2,15 @@
 resource "aws_security_group" "all_worker_mgmt" {
   name_prefix = "all_worker_management"
   vpc_id      = module.vpc.vpc_id
+
+  revoke_rules_on_delete = true # Important: ensures deletion when SG has rules
+
+  tags = {
+    Name = "all_worker_mgmt"
+  }
+
+  # Ensures Terraform waits for EKS deletion
+  depends_on = [module.eks]
 }
 
 resource "aws_security_group_rule" "all_worker_mgmt_ingress" {
